@@ -5,8 +5,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import androidx.core.content.ContextCompat;
+
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,7 +16,7 @@ import org.xdty.preference.colorpicker.ColorPickerSwatch;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ColorActivity extends BaseActivity {
+public class ColorActivity<ColourFill> extends BaseActivity {
     private static final String TAG = "ColorActivity";
 
     @BindView(R.id.ivImage)
@@ -29,16 +29,14 @@ public class ColorActivity extends BaseActivity {
     private Bitmap oldBitmap;
     private ColourFill mColourFill;
     private int tolarance = 190;
-/*
+    int planeta;
 
-    public native void constructor(*/
-/*Bitmap bitmap*//*
-);
+
 
     public static native void floodFill(Bitmap bitmap, int x, int y, int fillColor, int targetColor, int tolerance);
 
     public static native void redo(Bitmap bitmap, int fillColor, int targetColor, int tolerance);
-*/
+
 
     @Override
     protected int getLayoutId() {
@@ -62,8 +60,8 @@ public class ColorActivity extends BaseActivity {
                         currentX = (int) (point.x / devVsImgRatio);
                         currentY = (int) (point.y / devVsImgRatio);
                         Bitmap bitmap = currentBitmap;
-                        //floodFill(bitmap, currentX, currentY, mSelectedColor, Color.BLACK, 50);
-                        mColourFill.floodFill(bitmap, currentX, currentY, mSelectedColor, Color.BLACK, tolarance);
+                        floodFill(bitmap, currentX, currentY, mSelectedColor, Color.BLACK, 50);
+                        //mColourFill.floodFill(bitmap, currentX, currentY, mSelectedColor, Color.BLACK, tolarance);
                         ivImagePaint.setImageBitmap(bitmap);
                         break;
                 }
@@ -73,11 +71,11 @@ public class ColorActivity extends BaseActivity {
     }
 
     private void init() {
-        mColourFill = new ColourFill();
+        //mColourFill = new ColourFill();
         ivImagePaint.setMaxZoom(15);
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inScaled = false;
-        originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.one, o);
+        originalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lineart1, o);
         ivImagePaint.setImageBitmap(originalBitmap);
         currentBitmap = originalBitmap.copy(originalBitmap.getConfig(), true);
         oldBitmap = originalBitmap;
@@ -110,13 +108,13 @@ public class ColorActivity extends BaseActivity {
     @OnClick(R.id.btn_redo)
     public void onClickRedo(View view) {
         Bitmap bitmapo = currentBitmap;
-        //redo(bitmapo,Color.WHITE ,Color.BLACK, 50);
-        mColourFill.redo(bitmapo, Color.WHITE, Color.BLACK, 0);
+        redo(bitmapo,Color.WHITE ,Color.BLACK, 50);
+        //mColourFill.redo(bitmapo, Color.WHITE, Color.BLACK, 0);
         ivImagePaint.setImageBitmap(bitmapo);
     }
-/*
+
     static {
         System.loadLibrary("jnibitmap");
-    }*/
+    }
 
 }
